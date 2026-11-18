@@ -18,7 +18,7 @@ function dbUrl() {
   const pool = new Pool({ connectionString: dbUrl() });
   const client = await pool.connect();
   try {
-    const schema = fs.readFileSync(path.join(__dirname, '..', '..', 'database', 'schema.sql'), 'utf-8');
+    const schema = fs.readFileSync(path.join(__dirname, '..', 'database', 'schema.sql'), 'utf-8');
     await client.query(schema);
     console.log('schema.sql dimuat.');
 
