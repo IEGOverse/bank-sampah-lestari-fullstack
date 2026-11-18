@@ -1,72 +1,58 @@
-# Fullstack — Bank Sampah Lestari (Tahap 5 · Implementasi sesuai rancangan awal)
+# Bank Sampah Lestari — Tahap 5: Implementasi (Online)
 
-**Status:** ✅ Dibangun & diuji **secara lokal** (React → Express → PostgreSQL tertanam).
-❌ **Belum di-deploy** ke hosting publik — diperlukan akun hosting backend & database (mis. Render/Neon/Supabase) yang belum tersedia.
+**URL:** https://app-production-f6470cb1.up.railway.app
 
-## Teknologi (sesuai rancangan Tahap 4)
+## Stack (sesuai rancangan Tahap 4)
 
-| Lapisan | Teknologi | Status |
+- **Frontend**: React 19 + Vite 8 (SPA) — seluruh US-01 s.d. US-13
+- **Backend**: Node.js + Express 4 (REST API, JWT + bcrypt, RBAC middleware)
+- **Database**: PostgreSQL 18 (service Railway) — skema v2.0 `database/schema.sql`
+- **Hosting**: Railway — `app` (web service, menyajikan React build + `/api/*`) + `Postgres`
+- **Auth**: JWT (bcrypt hash) — `Authorization: Bearer <token>`
+
+## Akun uji (password = username + `123`)
+
+| Username | Password | Peran |
 |---|---|---|
-| Frontend | **React 19 + Vite 8** (SPA, React Router bawaan — tab state) | Dibangun, berfungsi |
-| Backend | **Node.js + Express 4** (REST API JSON, JWT + bcrypt, RBAC middleware) | Dibangun, berfungsi |
-| Database | **PostgreSQL 17.9** (skema v2.0 `database/schema.sql`) | Dibangun, berfungsi |
-| Pengujian | pgembed (PostgreSQL tertanam) + uji HTTP via PowerShell/browser | Lulus |
-| Hosting | Static Hosting/CDN (FE) · Backend/API Hosting (BE) · PostgreSQL Database Hosting (DB) | **Belum dipilih/di-deploy** |
+| `ketua` | `ketua123` | Ketua |
+| `petugas` | `petugas123` | Petugas Timbang |
+| `petugas2` | `petugas123` | Petugas Timbang |
+| `bendahara` | `bendahara123` | Bendahara |
+| `nasabah` | `nasabah123` | Nasabah (BS-0000001) |
+| `nasabah2` | `nasabah123` | Nasabah (BS-0000002) |
+| `nasabah3` | `nasabah123` | Nasabah (BS-0000003) |
+
+## Terbukti berjalan di lingkungan produksi
+
+- ✅ Login RBAC 4 aktor → tampilan & menu sesuai peran
+- ✅ Uji setoran via UI → "Tersimpan. Ref: SET-202611-00001 · Total Rp 50.000 · Tabungan Rp 45.000"
+- ✅ Ketua dashboard menampilkan data langsung dari PostgreSQL: 3 nasabah · stok 20 kg · tabungan Rp 45.000 · kas Rp 5.000
+- ✅ `/api/health` → `{"status":"ok", ...}`
 
 ## Struktur
 
 ```
-fullstack/
-├── backend/            # Express API  (src/app.js, routes/, src/db.js)
-│   ├── src/app.js      # entry point (port 3000)
-│   ├── src/db.js       # pool + helper transaksi atomik
-│   ├── src/auth.js     # JWT sign/verify + middleware authRequired
-│   ├── src/rbac.js     # requireRole() — otorisasi per peran
-│   ├── src/audit.js    # writeAudit() → audit_log
-│   └── src/routes/     # auth.js + api.js (seluruh endpoint US-01…13)
-└── frontend/           # React + Vite (SPA) — komponen sesuai US-01…13
-    ├── src/api.js      # fetch wrapper (token JWT dari localStorage)
-    ├── src/App.jsx     # shell: sidebar per peran + router tab
-    └── src/components/ # Login, Dashboard, Setoran, Harga, Saldo, Penarikan,
-                        # Stok, Penimbangan, Penjualan, Kas, Koreksi, Laporan, US03
+backend/     Express API (src/app.js, src/db.js, src/auth.js, src/rbac.js, routes/)
+frontend/    React + Vite SPA (src/api.js, App.jsx, components/)
+database/    schema.sql (v2.0, idempoten)
+render.yaml  (opsional, penyedia hosting alternatif)
+railway.json
 ```
 
-## Cara menjalankan (lokal)
+## Cara deploy ulang (CLI Railway)
 
 ```bash
-# 1) Nyalakan PostgreSQL tertanam (port tertulis ke fullstack/.db_uri)
-python fullstack/scripts/db_up.py     # biarkan berjalan
-
-# 2) Muat skema v2.0 + akun uji (bcrypt-hashed) — sekali saja per DB baru
-cd fullstack/backend
-node db_init.js
-
-# 3) Jalankan backend (port 3000)
-node src/app.js
-
-# 4) Jalankan frontend (port 5173/5174, proxy /api → localhost:3000)
-cd ../frontend
-npm install
-npm run dev
+cd fullstack
+npm i -g @railway/cli --allow-scripts=@railway/cli
+railway login --browserless
+railway up
+node backend/db_init.js    # hanya sekali saat DB baru — muat schema + akun
 ```
 
-Akun uji (password = username + `123`, di-hash **bcrypt**): `ketua` · `petugas` · `petugas2` · `bendahara` · `nasabah` · `nasabah2` · `nasabah3`.
+## Batasan jujur
 
-## Hasil uji nyata (18 Nov 2026)
-
-- ✅ Backend ↔ PostgreSQL tertanam: `schema.sql` dimuat tanpa error; 7 jenis sampah + 7 stok + akun hashed termuat.
-- ✅ Login RBAC: `nasabah` diblokir dari `/api/pengguna` (HTTP 403).
-- ✅ Setoran via API: 10 kg Botol Plastik → **SET-202611-00001** · total Rp25.000 · tabungan Rp22.500 · kas Rp2.500 (transaksi atomik: header + detail + saldo + stok + kas 10% + audit).
-- ✅ Penarikan: < Rp50.000 ditolak (HTTP 409); > saldo ditolak (INSUFFICIENT_BALANCE); 1×/bulan diberlakukan.
-- ✅ Frontend (React) → API → DB: Petugas login → **mencatat setoran 5 kg → "Tersimpan. Ref: SET-202611-00006 · Total Rp 12.500 · Tabungan Rp 11.250"**.
-- ✅ Ketua dashboard menampilkan data nyata dari PostgreSQL (3 nasabah, stok 110 kg, saldo Rp107.500, kas Rp17.500).
-- ✅ `npm run build` sukses (289 kB bundle).
-
-## Belum dilakukan / Batasan
-
-- ❌ **Deployment publik** — diperlukan akun hosting backend & database; belum tersedia. (Frontend dapat di-deploy ke GitHub Pages, tetapi tanpa backend publik aplikasi tidak dapat berfungsi bagi pengunjung.)
-- ❌ Belum ada test suite otomatis (uji manual + verifikasi browser).
-- ❌ `estimasi_nilai` pada `stok_gudang` tidak diupdate otomatis (tidak memengaruhi laporan stok).
-- ⚠️ `JWT_SECRET` masih default dev di `.env` — untuk produksi wajib diganti.
-- ⚠️ Data contoh (harga, transaksi) adalah **DATA DUMMY**; bukan data produksi.
-- ⚠️ Jika PostgreSQL tertanam mati (proses `db_up.py` berhenti), data hilang → seed ulang dengan `node db_init.js`.
+- Data contoh = **DATA DUMMY**; bukan data produksi Bank Sampah Lestari.
+- Aplikasi tetap satu-URL (Express menyajikan React build) — bukan CDN terpisah.
+- Free tier Railway: app bisa "tidur" setelah 15 menit tidak diakses; request pertama ~1 menit (cold start).
+- `JWT_SECRET` disetel di service env; nilai tersimpan di dashboard Railway, tidak di-repo.
+- Tanpa test suite otomatis (uji manual + verifikasi end-to-end dari browser).
