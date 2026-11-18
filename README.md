@@ -14,6 +14,7 @@
 
 | Username | Password | Peran |
 |---|---|---|
+| `admin` | `admin123` | **Admin** (teknis — semua kewenangan pengurus + manajemen akun) |
 | `ketua` | `ketua123` | Ketua |
 | `petugas` | `petugas123` | Petugas Timbang |
 | `petugas2` | `petugas2123` | Petugas Timbang |
@@ -21,6 +22,8 @@
 | `nasabah` | `nasabah123` | Nasabah (BS-0000001) |
 | `nasabah2` | `nasabah2123` | Nasabah (BS-0000002) |
 | `nasabah3` | `nasabah3123` | Nasabah (BS-0000003) |
+
+> **Admin vs Ketua (dipisah sejak 19 Nov 2026):** Admin adalah peran teknis untuk pengelolaan akun/sistem (semua kewenangan pengurus + US-03 + audit log). Ketua tetap berwenang penuh sesuai SRS (termasuk US-03). Catatan kejujuran: SRS asli hanya mengenal 4 peran; penambahan `Admin` adalah permintaan klien di Tahap 5, bukan usulan SRS/Tahap 2.
 
 ## Terbukti berjalan di lingkungan produksi
 

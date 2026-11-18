@@ -56,18 +56,21 @@ function dbUrl() {
     const hargaNov = { 1: 2500, 2: 1000, 3: 1500, 4: 1200, 5: 5000, 6: 8000, 7: 800 };
     for (const idJenis of Object.keys(hargaNov)) {
       const id = Number(idJenis);
-      await client.query(
-        `INSERT INTO harga_sampah (id_jenis, harga_per_kg, periode_mulai, periode_selesai, id_penetap)
-         VALUES ($1,$2,'2026-10-01','2026-10-31',$3)
-         ON CONFLICT (id_jenis, periode_mulai) DO NOTHING`,
-        [id, hargaOkt[id], 1]
-      );
-      await client.query(
-        `INSERT INTO harga_sampah (id_jenis, harga_per_kg, periode_mulai, periode_selesai, id_penetap)
-         VALUES ($1,$2,'2026-11-01',NULL,$3)
-         ON CONFLICT (id_jenis, periode_mulai) DO NOTHING`,
-        [id, hargaNov[id], 1]
-      );
+      const rows = [
+        ['2026-10-01', hargaOkt[id], '2026-10-31'],
+        ['2026-11-01', hargaNov[id], null],
+      ];
+      for (const [mulai, harga, selesai] of rows) {
+        // Periksa dulu: trigger anti-tumpang-tindih menyala SEBELUM ON CONFLICT bekerja,
+        // jadi INSERT buta pada periode yang sama akan error.
+        const ada = (await client.query('SELECT 1 FROM harga_sampah WHERE id_jenis = $1 AND periode_mulai = $2', [id, mulai])).rowCount;
+        if (ada) continue;
+        await client.query(
+          `INSERT INTO harga_sampah (id_jenis, harga_per_kg, periode_mulai, periode_selesai, id_penetap)
+           VALUES ($1,$2,$3,$4,$5)`,
+          [id, harga, mulai, selesai, 1]
+        );
+      }
     }
     console.log('Harga contoh (DATA DUMMY) termuat.');
     console.log('SELESAI.');
