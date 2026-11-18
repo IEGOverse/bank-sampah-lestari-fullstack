@@ -9,7 +9,9 @@ const apiRoutes = require('./routes/api');
 const errorHandler = require('./errorHandler');
 
 const app = express();
-app.use(helmet());
+// Catatan: CSP dimatikan untuk demo — index.html memuat script inline dari CDN.
+// Untuk produksi: aktifkan CSP yang hanya mengizinkan origin CDN yang dipakai.
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(express.json({ limit: '512kb' }));
 
