@@ -47,6 +47,19 @@ async function riwayatRekening(noRek) {
   const tarik = (await pool.query(`SELECT tgl_tarik iso, 'Penarikan' tipe, no_referensi ref, jumlah_tarik nominal, FALSE plus FROM penarikan_saldo WHERE no_rekening = $1 AND status_transaksi = 'Berhasil'`, [noRek])).rows;
   return [...setor, ...tarik].sort((a, b) => (a.iso < b.iso ? 1 : -1));
 }
+router.patch('/nasabah/:noRek/no-buku-tabungan', requireRole('Ketua'), async (req, res, next) => {
+  try {
+    const rek = String(req.params.noRek).trim().toUpperCase();
+    const nb = String(req.body?.no_buku_tabungan ?? '').trim();
+    if (nb.length && !/^[A-Z0-9\-]{3,30}$/i.test(nb)) throw httpError(400, 'VALIDATION', 'No. buku tabungan tidak valid.');
+    const before = (await pool.query('SELECT no_buku_tabungan FROM nasabah WHERE no_rekening = $1', [rek])).rows[0];
+    if (!before) throw httpError(404, 'NOT_FOUND', 'Nasabah tidak ditemukan.');
+    const after = (await pool.query('UPDATE nasabah SET no_buku_tabungan = $1 WHERE no_rekening = $2 RETURNING no_rekening, nama_nasabah, no_buku_tabungan', [nb || null, rek])).rows[0];
+    await writeAudit(pool, { tabel: 'nasabah', id_referensi: rek, aksi: 'UPDATE', alasan: nb ? `No. buku tabungan diisi/ubah → ${nb}` : 'No. buku tabungan dihapus', id_pengguna: req.user.id, data_sebelum: before, data_sesudah: after });
+    res.json(after);
+  } catch (e) { next(e); }
+});
+
 router.get('/nasabah/me', async (req, res, next) => {
   try {
     const nb = (await pool.query('SELECT no_rekening, nama_nasabah, no_hp, alamat, saldo, tgl_daftar, status_aktif, no_buku_tabungan FROM nasabah WHERE id_pengguna = $1', [req.user.id])).rows[0];

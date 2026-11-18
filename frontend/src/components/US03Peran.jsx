@@ -20,6 +20,10 @@ export default function US03Peran() {
     try { await api(`/pengguna/${p.id_pengguna}/status`, { method: 'PATCH', body: JSON.stringify({ status: !p.status }) }); setMsg(`Status ${p.username} diperbarui`); load() }
     catch (e) { setErr(e.message) }
   }
+  const saveBuku = async (noRek, buku, username) => {
+    try { await api(`/nasabah/${noRek}/no-buku-tabungan`, { method: 'PATCH', body: JSON.stringify({ no_buku_tabungan: buku }) }); setMsg(`Buku tabungan ${username} diperbarui`); load() }
+    catch (e) { setErr(e.message) }
+  }
 
   const peranOpts = ['Nasabah', 'Ketua', 'Petugas Timbang', 'Bendahara']
   return (
@@ -41,7 +45,11 @@ export default function US03Peran() {
                 <td className="font-bold">{p.nama_lengkap}</td>
                 <td className="font-mono">{p.username}</td>
                 <td className="font-mono">{p.no_rekening || '—'}</td>
-                <td className="font-mono">{p.no_buku_tabungan || '—'}</td>
+                <td className="font-mono">
+                  {p.peran === 'Nasabah' || p.no_rekening ? (
+                    <input className="input !py-1.5 !text-xs font-mono w-32" defaultValue={p.no_buku_tabungan || ''} placeholder="belum dicatat" onBlur={e => saveBuku(p.no_rekening, e.target.value, p.username)} aria-label="No. buku tabungan" />
+                  ) : '—'}
+                </td>
                 <td><span className="pill pill-ok">{p.peran}</span></td>
                 <td>
                   <select className="input !py-1.5 !text-xs" defaultValue={p.peran} onChange={e => tetapkan(p.id_pengguna, e.target.value, p.username)}>

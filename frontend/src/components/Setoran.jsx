@@ -32,12 +32,12 @@ export default function Setoran() {
   const tab = Math.round(total * 0.9)
 
   const submit = async (e) => {
-    e.preventDefault(); setErr(''); setSukses('')
+    e.preventDefault(); setErr(''); setSukses(null)
     try {
       const items = baris.filter(b => Number(b.berat_kg) > 0).map(b => ({ id_jenis: Number(b.id_jenis), berat_kg: Number(b.berat_kg) }))
       if (!items.length) throw new Error('Isi minimal satu jenis dengan berat > 0.')
       const r = await api('/setoran', { method: 'POST', body: JSON.stringify({ no_rekening: pilih, tgl_setor: tgl, items }) })
-      setSukses(`Tersimpan. Ref: ${r.no_referensi} · Total ${rupiah(r.total_nilai)} · Tabungan ${rupiah(r.nilai_tabungan)}`)
+      setSukses({ ref: r.no_referensi, total: r.total_nilai, tab: r.nilai_tabungan, kas: r.nilai_kas_operasional, rek: pilih, tgl, items })
       setPilih(''); setBaris([{ id_jenis: 1, berat_kg: '' }])
       api('/setoran?limit=5').then(setRiwayat).catch(() => {})
     } catch (e) { setErr(e.message) }
@@ -52,7 +52,25 @@ export default function Setoran() {
         <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg"><i className="fa-solid fa-scale-balanced"></i></div>
       </div>
       {err && <p className="text-[11px] font-bold text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2">{err}</p>}
-      {sukses && <p className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">{sukses}</p>}
+      {sukses && (
+        <div className="border border-emerald-300 bg-emerald-50 rounded-2xl p-4 text-xs">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <p className="font-extrabold text-emerald-800">✅ Setoran Tersimpan</p>
+              <p className="font-mono text-[11px] mt-1">{sukses.ref} · {sukses.tgl} · {sukses.rek}</p>
+            </div>
+            <button className="btn btn-primary !py-1.5 !px-4 !text-[11px]" onClick={() => window.print()}><i className="fa-solid fa-print"></i> Cetak Bukti</button>
+          </div>
+          <div className="mt-3 border-t border-emerald-200 pt-2">
+            <ul className="font-mono text-[11px] space-y-0.5">
+              {sukses.items.map((it, i) => <li key={i}>Jenis #{it.id_jenis} · {it.berat_kg} kg</li>)}
+            </ul>
+            <div className="mt-2 flex justify-between font-bold"><span>Total</span><span>{rupiah(sukses.total)}</span></div>
+            <div className="flex justify-between"><span>Tabungan 90%</span><span>{rupiah(sukses.tab)}</span></div>
+            <div className="flex justify-between"><span>Kas 10%</span><span>{rupiah(sukses.kas)}</span></div>
+          </div>
+        </div>
+      )}
       <form onSubmit={submit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="sm:col-span-2">

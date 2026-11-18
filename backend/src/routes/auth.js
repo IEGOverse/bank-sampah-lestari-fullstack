@@ -15,6 +15,10 @@ router.post('/register', async (req, res, next) => {
     if (!nama_lengkap || !no_hp || !alamat || !username || !password) {
       throw httpError(400, 'VALIDATION', 'nama_lengkap, no_hp, alamat, username, dan password wajib diisi.');
     }
+    const _noHP = String(no_hp).trim();
+    if (!/^(\+62|62|0)8[0-9]{7,11}$/.test(_noHP.replace(/[\s\-]/g, ''))) {
+      throw httpError(400, 'VALIDATION', 'Format nomor HP harus diawali 08xxx / +62xxx, angka saja, minimal 10 digit.');
+    }
     if (String(username).trim().length < 3) throw httpError(400, 'VALIDATION', 'Username minimal 3 karakter.');
     if (String(password).length < 4) throw httpError(400, 'VALIDATION', 'Password minimal 4 karakter.');
 
