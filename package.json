@@ -1,0 +1,10 @@
+{
+  "name": "bank-sampah-lestari",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tahap 5 - Implementasi (monorepo: Express backend + React/Vite frontend)",
+  "scripts": {
+    "build": "cd frontend && npm ci && npm run build && cd ../backend && npm ci",
+    "start": "node backend/src/app.js"
+  }
+}

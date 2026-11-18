@@ -19,6 +19,15 @@ app.use('/api', apiRoutes);
 app.use(errorHandler);
 
 const PORT = Number(process.env.PORT || 3000);
+
+// Sajikan hasil build frontend (React/Vite) bila ada — supaya satu URL melayani app + API.
+const frontendDist = path.resolve(__dirname, '..', '..', 'frontend', 'dist');
+if (require('fs').existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  // fallback SPA: semua non-/api → index.html
+  app.get(/^(?!\/api\/).*/, (req, res) => res.sendFile(path.join(frontendDist, 'index.html')));
+}
+
 app.listen(PORT, () => {
   console.log(`Bank Sampah Lestari API berjalan di http://localhost:${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);
