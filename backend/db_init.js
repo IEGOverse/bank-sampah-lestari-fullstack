@@ -25,11 +25,11 @@ function dbUrl() {
     const users = [
       ['ketua', 'ketua123', 'Ketua Bank Sampah', 'Ketua'],
       ['petugas', 'petugas123', 'Petugas Timbang 1', 'Petugas Timbang'],
-      ['petugas2', 'petugas123', 'Petugas Timbang 2', 'Petugas Timbang'],
+      ['petugas2', 'petugas2123', 'Petugas Timbang 2', 'Petugas Timbang'],
       ['bendahara', 'bendahara123', 'Bendahara Bank Sampah', 'Bendahara'],
       ['nasabah', 'nasabah123', 'Bpk. Nasabah A', 'Nasabah'],
-      ['nasabah2', 'nasabah123', 'Ibu Nasabah B', 'Nasabah'],
-      ['nasabah3', 'nasabah123', 'Bpk. Nasabah C', 'Nasabah'],
+      ['nasabah2', 'nasabah2123', 'Ibu Nasabah B', 'Nasabah'],
+      ['nasabah3', 'nasabah3123', 'Bpk. Nasabah C', 'Nasabah'],
     ];
     for (const [username, password, nama, peran] of users) {
       const hash = await bcrypt.hash(password, 10);

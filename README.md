@@ -16,11 +16,11 @@
 |---|---|---|
 | `ketua` | `ketua123` | Ketua |
 | `petugas` | `petugas123` | Petugas Timbang |
-| `petugas2` | `petugas123` | Petugas Timbang |
+| `petugas2` | `petugas2123` | Petugas Timbang |
 | `bendahara` | `bendahara123` | Bendahara |
 | `nasabah` | `nasabah123` | Nasabah (BS-0000001) |
-| `nasabah2` | `nasabah123` | Nasabah (BS-0000002) |
-| `nasabah3` | `nasabah123` | Nasabah (BS-0000003) |
+| `nasabah2` | `nasabah2123` | Nasabah (BS-0000002) |
+| `nasabah3` | `nasabah3123` | Nasabah (BS-0000003) |
 
 ## Terbukti berjalan di lingkungan produksi
 
