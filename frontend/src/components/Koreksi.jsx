@@ -1,4 +1,4 @@
-﻿/* US-12 — Mengoreksi transaksi (Ketua) — Setoran & Kas; riwayat audit */
+﻿/* US-12 — Mengoreksi transaksi (Ketua) — Setoran, Kas & Penarikan; riwayat audit */
 import { useEffect, useState } from 'react'
 import { api } from '../api'
 import { rupiah, tglID } from '../App'
@@ -18,9 +18,12 @@ export default function Koreksi() {
     setErr(''); setMsg(''); setPanel(null)
     try {
       if (tipe === 'setoran') setPanel({ kind: 'setoran', data: await api('/setoran/by-ref/' + ref.trim().toUpperCase()) })
-      else {
+      else if (tipe === 'kas') {
         const d = await api('/kas'); const k = d.kas.find(x => x.no_referensi === ref.trim().toUpperCase()); if (!k) throw new Error('Transaksi kas tidak ditemukan.')
         setPanel({ kind: 'kas', data: k })
+      } else if (tipe === 'penarikan') {
+        const rows = await api('/penarikan?ref=' + encodeURIComponent(ref.trim().toUpperCase()) + '&limit=1'); const p = rows[0]; if (!p) throw new Error('Penarikan tidak ditemukan.')
+        setPanel({ kind: 'penarikan', data: p })
       }
     } catch (e) { setErr(e.message) }
   }
@@ -31,18 +34,20 @@ export default function Koreksi() {
         <div className="flex items-start justify-between gap-3 border-b pb-4 mb-5 flex-wrap">
           <div><div className="flex items-center gap-2 flex-wrap"><span className="us-chip">US-12</span><span className="actor-badge actor-ketua">Aktor: Ketua (berwenang)</span><span className="dummy-badge">Data Dummy</span></div>
             <h3 className="text-lg font-black text-slate-800 mt-2">Koreksi Transaksi</h3>
-            <p className="text-[11px] text-slate-500">Setoran &amp; Kas didukung; wajib alasan; tercatat di audit log; 90:10 &amp; stok otomatis disesuaikan.</p></div>
+            <p className="text-[11px] text-slate-500">Setoran, Penarikan &amp; Kas didukung; wajib alasan; tercatat di audit log; 90:10 &amp; stok otomatis disesuaikan.</p></div>
           <div className="w-11 h-11 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg"><i className="fa-solid fa-pen-to-square"></i></div>
         </div>
         {msg && <p className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 mb-3">{msg}</p>}
         {err && <p className="text-[11px] font-bold text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2 mb-3">{err}</p>}
         <div className="flex flex-wrap gap-2 max-w-2xl mb-4">
-          <select className="input w-36" value={tipe} onChange={e => { setTipe(e.target.value); setPanel(null) }}><option value="setoran">Setoran</option><option value="kas">Kas</option></select>
+          <select className="input w-36" value={tipe} onChange={e => { setTipe(e.target.value); setPanel(null) }}><option value="setoran">Setoran</option><option value="kas">Kas</option><option value="penarikan">Penarikan</option></select>
           <input className="input font-mono flex-1" placeholder="No. referensi, mis. SET-202611-00001" value={ref} onChange={e => setRef(e.target.value)} onKeyDown={e => e.key === 'Enter' && cari()} />
           <button className="btn btn-slate" onClick={cari}><i className="fa-solid fa-magnifying-glass"></i> Cari</button>
         </div>
         {panel?.kind === 'setoran' && <SetoranEditor data={panel.data} onDone={(m) => { setMsg(m); setPanel(null); setRef(''); loadAudit() }} onErr={setErr} />}
         {panel?.kind === 'kas' && <KasEditor data={panel.data} onDone={(m) => { setMsg(m); setPanel(null); setRef(''); loadAudit() }} onErr={setErr} />}
+        {panel?.kind === 'penarikan' && <PenarikanEditor data={panel.data} onDone={(m) => { setMsg(m); setPanel(null); setRef(''); loadAudit() }} onErr={setErr} />}
+        <p className="text-[11px] text-slate-500 mt-3">Didukung: Setoran · Penarikan · Kas — semua wajib alasan, terekam di audit_log.</p>
       </div>
 
       <div className="glass-card p-5 sm:p-6 rounded-3xl">
@@ -80,6 +85,37 @@ function SetoranEditor({ data, onDone, onErr }) {
         ))}
         <div className="flex justify-between font-bold pt-2 border-t border-slate-200"><span>Estimasi total</span><span className="font-mono">{rupiah(total)}</span></div>
         <div><label className="lbl">Alasan Koreksi *</label><textarea className="input" rows={2} required placeholder="mis. Salah input berat" value={alasan} onChange={e => setAlasan(e.target.value)}></textarea></div>
+        <div className="flex justify-end"><button className="btn btn-primary" onClick={save}><i className="fa-solid fa-check"></i> Simpan Koreksi</button></div>
+      </div>
+    </div>
+  )
+}
+
+function PenarikanEditor({ data, onDone, onErr }) {
+  const [jumlah, setJumlah] = useState(String(data.jumlah_tarik))
+  const [alasan, setAlasan] = useState('')
+  const save = async () => {
+    try {
+      const baru = Number(jumlah)
+      if (!alasan.trim()) throw new Error('Alasan koreksi wajib diisi.')
+      if (!Number.isFinite(baru) || baru <= 0 || baru > Number(data.saldo_sebelum)) throw new Error(`Jumlah baru harus > 0 dan ≤ saldo sebelum (Rp${data.saldo_sebelum}).`)
+      await api('/koreksi', { method: 'POST', body: JSON.stringify({ tipe: 'penarikan', no_referensi: data.no_referensi, nominal_baru: baru, keterangan_baru: 'Koreksi penarikan', alasan }) })
+      onDone('Penarikan terkoreksi & tercatat di audit log.')
+    } catch (e) { onErr(e.message) }
+  }
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs">
+      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+        <p className="font-extrabold text-slate-500 uppercase text-[10px]">Sebelum — DUMMY · Ref {data.no_referensi}</p>
+        <div className="flex justify-between"><span className="text-slate-500">Nasabah</span><span className="font-bold">{data.nama_nasabah}</span></div>
+        <div className="flex justify-between"><span className="text-slate-500">Jumlah Penarikan</span><span className="font-mono">{rupiah(data.jumlah_tarik)}</span></div>
+        <div className="flex justify-between"><span className="text-slate-500">Saldo Sebelum</span><span className="font-mono">{rupiah(data.saldo_sebelum)}</span></div>
+        <div className="flex justify-between"><span className="text-slate-500">Sisa Setelah</span><span className="font-mono">{rupiah(data.sisa_saldo)}</span></div>
+      </div>
+      <div className="space-y-2">
+        <div><label className="lbl">Jumlah Baru (Rp)</label><input type="number" min="0" step="1000" className="input font-mono" value={jumlah} onChange={e => setJumlah(e.target.value)} /></div>
+        <p className="text-[10px] text-slate-400">Maksimal saldo sebelum: {rupiah(data.saldo_sebelum)}</p>
+        <div><label className="lbl">Alasan Koreksi *</label><textarea className="input" rows={2} required placeholder="mis. Salah jumlah penarikan" value={alasan} onChange={e => setAlasan(e.target.value)}></textarea></div>
         <div className="flex justify-end"><button className="btn btn-primary" onClick={save}><i className="fa-solid fa-check"></i> Simpan Koreksi</button></div>
       </div>
     </div>

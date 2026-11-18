@@ -204,7 +204,24 @@ router.post('/koreksi', requireRole('Ketua'), async (req, res, next) => {
       return res.json({ message: 'Setoran terkoreksi.', setoran: out });
     }
 
-    throw httpError(400, 'VALIDATION', "tipe harus 'kas' atau 'setoran'.");
+    if (tipe === 'penarikan') {
+      const p = (await pool.query('SELECT * FROM penarikan_saldo WHERE no_referensi = $1', [ref])).rows[0];
+      if (!p) throw httpError(404, 'NOT_FOUND', 'Penarikan tidak ditemukan.');
+      if (p.status_transaksi === 'Dibatalkan') throw httpError(409, 'ALREADY_CANCELLED', 'Penarikan sudah dibatalkan.');
+      const jumlah = Number(nominal_baru);
+      if (!Number.isFinite(jumlah) || jumlah <= 0 || jumlah > Number(p.saldo_sebelum)) throw httpError(400, 'VALIDATION', `Jumlah baru harus > 0 dan ≤ saldo sebelum (Rp${p.saldo_sebelum}).`);
+      const delta = jumlah - Number(p.jumlah_tarik);
+      const sisa = Number(p.saldo_sebelum) - jumlah;
+      const out = await inTransaction(async (client) => {
+        await client.query('UPDATE nasabah SET saldo = saldo - $1 WHERE no_rekening = $2', [delta, p.no_rekening]);
+        const after = (await client.query('UPDATE penarikan_saldo SET jumlah_tarik = $1, sisa_saldo = $2 WHERE no_referensi = $3 RETURNING no_referensi, jumlah_tarik, sisa_saldo', [jumlah, sisa, ref])).rows[0];
+        await writeAudit(client, { tabel: 'penarikan_saldo', id_referensi: ref, aksi: 'KOREKSI', alasan: String(alasan).trim() + ` (jumlah Rp${p.jumlah_tarik} → Rp${jumlah})`, id_pengguna: req.user.id, data_sebelum: { jumlah_tarik: p.jumlah_tarik, sisa_saldo: p.sisa_saldo }, data_sesudah: { jumlah_tarik: after.jumlah_tarik, sisa_saldo: after.sisa_saldo } });
+        return after;
+      });
+      return res.json({ message: 'Penarikan terkoreksi.', penarikan: out });
+    }
+
+    throw httpError(400, 'VALIDATION', "tipe harus 'kas', 'setoran', atau 'penarikan'.");
   } catch (e) { next(e); }
 });
 
@@ -310,11 +327,17 @@ router.post('/penarikan', requireRole('Bendahara', 'Ketua'), async (req, res, ne
 });
 router.get('/penarikan', async (req, res, next) => {
   try {
-    const rek = req.query.no_rekening; const limit = Math.min(Number(req.query.limit) || 20, 100);
+    const rek = req.query.no_rekening; const ref = req.query.ref; const limit = Math.min(Number(req.query.limit) || 20, 100);
+    const where = [];
+    const params = [];
+    if (rek) { params.push(rek); where.push(`p.no_rekening = $${params.length}`); }
+    if (ref) { params.push(String(ref).toUpperCase()); where.push(`p.no_referensi = $${params.length}`); }
+    const whereSql = where.length ? 'WHERE ' + where.join(' AND ') : '';
+    params.push(limit);
     const rows = (await pool.query(`
-      SELECT p.no_referensi, p.tgl_tarik, p.jumlah_tarik, p.sisa_saldo, p.status_transaksi, n.nama_nasabah
+      SELECT p.no_referensi, p.tgl_tarik, p.jumlah_tarik, p.sisa_saldo, p.saldo_sebelum, p.status_transaksi, n.nama_nasabah
       FROM penarikan_saldo p JOIN nasabah n ON n.no_rekening = p.no_rekening
-      ${rek ? 'WHERE p.no_rekening = $1' : ''} ORDER BY p.tgl_tarik DESC LIMIT ${rek ? '$2' : '$1'}`, rek ? [rek, limit] : [limit])).rows;
+      ${whereSql} ORDER BY p.tgl_tarik DESC LIMIT $${params.length}`, params)).rows;
     res.json(rows);
   } catch (e) { next(e); }
 });
