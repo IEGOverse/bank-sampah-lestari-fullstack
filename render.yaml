@@ -1,0 +1,42 @@
+# Render Blueprint — Bank Sampah Lestari (Tahap 5: Implementasi)
+# Menyediakan: backend Express + PostgreSQL (free) + frontend statis (React/Vite).
+# Catatan: database free Render akan kedaluwarsa setelah ~30 hari (lihat dokumentasi Render).
+services:
+  # ── Backend API ──
+  - type: web
+    name: bank-sampah-lestari-backend
+    runtime: node
+    rootDir: fullstack/backend
+    plan: free
+    buildCommand: npm ci
+    startCommand: node src/app.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        value: https://iegoverse.github.io
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bank-sampah-lestari-db
+          property: connectionString
+
+  # ── Frontend statis (React/Vite) ──
+  - type: web
+    name: bank-sampah-lestari-app
+    runtime: static
+    rootDir: fullstack/frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://bank-sampah-lestari-backend.onrender.com/api
+
+databases:
+  - name: bank-sampah-lestari-db
+    plan: free
+    databaseName: bank_sampah_lestari
