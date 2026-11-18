@@ -23,6 +23,7 @@ function dbUrl() {
     console.log('schema.sql dimuat.');
 
     const users = [
+      ['admin', 'admin123', 'Administrator Sistem', 'Admin'],
       ['ketua', 'ketua123', 'Ketua Bank Sampah', 'Ketua'],
       ['petugas', 'petugas123', 'Petugas Timbang 1', 'Petugas Timbang'],
       ['petugas2', 'petugas2123', 'Petugas Timbang 2', 'Petugas Timbang'],

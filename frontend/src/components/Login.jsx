@@ -29,7 +29,7 @@ export default function Login({ onOk }) {
   }
 
   const demo = [
-    ['ketua', 'Ketua'], ['petugas', 'Petugas Timbang'], ['petugas2', 'Petugas Timbang 2'], ['bendahara', 'Bendahara'],
+    ['admin', 'Admin'], ['ketua', 'Ketua'], ['petugas', 'Petugas Timbang'], ['petugas2', 'Petugas Timbang 2'], ['bendahara', 'Bendahara'],
     ['nasabah', 'Nasabah (BS-0000001)'], ['nasabah2', 'Nasabah (BS-0000002)'], ['nasabah3', 'Nasabah (BS-0000003)'],
   ]
 
@@ -72,7 +72,7 @@ export default function Login({ onOk }) {
             </form>
           ) : (
             <form onSubmit={submitRegister} className="glass-card rounded-3xl p-6 sm:p-8 shadow-xl space-y-4">
-              <div><span className="us-chip">US-01</span><h3 className="text-lg font-black text-slate-800 mt-2">Registrasi Akun Nasabah</h3><p className="text-[11px] text-slate-500">Akun otomatis berperan <strong>Nasabah</strong>. Peran pengurus ditetapkan Ketua (US-03).</p></div>
+              <div><span className="us-chip">US-01</span><h3 className="text-lg font-black text-slate-800 mt-2">Registrasi Akun Nasabah</h3><p className="text-[11px] text-slate-500">Akun otomatis berperan <strong>Nasabah</strong>. Peran pengurus ditetapkan Admin/Ketua (US-03).</p></div>
               <div><label className="lbl" htmlFor="rn">Nama Lengkap *</label><input id="rn" className="input" required value={reg.nama_lengkap} onChange={e => setReg({ ...reg, nama_lengkap: e.target.value })} /></div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="lbl" htmlFor="hp">Nomor HP *</label><input id="hp" className="input" required value={reg.no_hp} onChange={e => setReg({ ...reg, no_hp: e.target.value })} /></div>
