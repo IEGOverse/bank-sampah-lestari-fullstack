@@ -249,7 +249,7 @@ router.get('/nasabah', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendaha
     res.json(rows);
   } catch (e) { next(e); }
 });
-router.post('/setoran', requireRole('Admin', 'Ketua', 'Petugas Timbang'), async (req, res, next) => {
+router.post('/setoran', requireRole('Admin', 'Petugas Timbang'), async (req, res, next) => {
   try {
     const { no_rekening, tgl_setor, items } = req.body || {};
     const iso = (typeof tgl_setor === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(tgl_setor)) ? tgl_setor : new Date().toISOString().slice(0, 10);
@@ -314,7 +314,7 @@ router.get('/setoran', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendaha
 });
 
 /* ---------- US-07 Penarikan (Bendahara) ---------- */
-router.post('/penarikan', requireRole('Admin', 'Ketua', 'Bendahara'), async (req, res, next) => {
+router.post('/penarikan', requireRole('Admin', 'Bendahara'), async (req, res, next) => {
   try {
     const { no_rekening, jumlah_tarik } = req.body || {};
     const jumlah = Number(jumlah_tarik);
@@ -452,7 +452,7 @@ router.get('/kas', requireRole('Admin', 'Ketua', 'Bendahara'), async (req, res, 
     res.json({ saldo, kas: rows });
   } catch (e) { next(e); }
 });
-router.post('/kas', requireRole('Admin', 'Ketua', 'Bendahara'), async (req, res, next) => {
+router.post('/kas', requireRole('Admin', 'Bendahara'), async (req, res, next) => {
   try {
     const { tipe_kas, nominal, keterangan, tgl_kas } = req.body || {};
     const nom = Number(nominal);

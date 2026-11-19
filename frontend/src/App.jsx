@@ -25,14 +25,14 @@ export const tglID = (iso) => { if (!iso) return '-'; const [y, m, d] = String(i
 const NAV = [
   { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie', roles: ['Ketua', 'Admin'] },
   { id: 'us03', label: 'Peran Pengurus', icon: 'fa-user-shield', roles: ['Ketua', 'Admin'] },
-  { id: 'us04', label: 'Catat Setoran', icon: 'fa-scale-balanced', roles: ['Petugas Timbang', 'Ketua', 'Admin'] },
+  { id: 'us04', label: 'Catat Setoran', icon: 'fa-scale-balanced', roles: ['Petugas Timbang', 'Admin'] },
   { id: 'us05', label: 'Harga Sampah', icon: 'fa-tags', roles: ['Ketua', 'Admin'] },
   { id: 'us06', label: 'Saldo & Riwayat', icon: 'fa-wallet', roles: ['Nasabah', 'Bendahara', 'Ketua', 'Admin'] },
-  { id: 'us07', label: 'Penarikan', icon: 'fa-money-bill-transfer', roles: ['Bendahara', 'Ketua', 'Admin'] },
+  { id: 'us07', label: 'Penarikan', icon: 'fa-money-bill-transfer', roles: ['Bendahara', 'Admin'] },
   { id: 'us08', label: 'Stok Gudang', icon: 'fa-warehouse', roles: ['Ketua', 'Admin'] },
-  { id: 'us09', label: 'Penimbangan Ulang', icon: 'fa-weight-scale', roles: ['Petugas Timbang', 'Ketua', 'Admin'] },
+  { id: 'us09', label: 'Penimbangan Ulang', icon: 'fa-weight-scale', roles: ['Petugas Timbang', 'Admin'] },
   { id: 'us10', label: 'Penjualan Pengepul', icon: 'fa-truck-ramp-box', roles: ['Ketua', 'Admin'] },
-  { id: 'us11', label: 'Kas Operasional', icon: 'fa-cash-register', roles: ['Bendahara', 'Ketua', 'Admin'] },
+  { id: 'us11', label: 'Kas Operasional', icon: 'fa-cash-register', roles: ['Bendahara', 'Admin'] },
   { id: 'us12', label: 'Koreksi Transaksi', icon: 'fa-pen-to-square', roles: ['Ketua', 'Admin'] },
   { id: 'us13', label: 'Laporan', icon: 'fa-file-chart-column', roles: ['Ketua', 'Admin'] },
 ]
