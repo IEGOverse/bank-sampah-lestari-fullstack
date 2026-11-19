@@ -37,8 +37,8 @@ export default function Dashboard() {
         <h3 className="font-extrabold text-sm text-slate-800 mb-2">Pengingat Operasional</h3>
         <ul className="space-y-1.5 list-disc list-inside">
           <li>Setoran setiap <strong>Sabtu pagi</strong> (BR-01).</li>
-          <li>Harga ditetapkan <strong>awal bulan</strong> (BR-04) → US-05.</li>
-          <li>Pengepul datang <strong>± 2 mingguan</strong> (BR-10) → US-09.</li>
+          <li>Harga ditetapkan <strong>awal bulan</strong>.</li>
+          <li>Pengepul datang <strong>± 2 mingguan</strong>.</li>
           <li>Penarikan min <strong>Rp50.000</strong>, maks <strong>1×/bulan</strong> (BR-08); Desember boleh seluruh saldo (BR-09).</li>
         </ul>
       </div>

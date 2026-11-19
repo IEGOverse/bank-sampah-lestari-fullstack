@@ -27,7 +27,7 @@ export default function Penimbangan() {
   return (
     <div className="glass-card p-5 sm:p-6 rounded-3xl">
       <div className="flex items-start justify-between gap-3 border-b pb-4 mb-5 flex-wrap">
-        <div><div className="flex items-center gap-2 flex-wrap"><span className="us-chip">US-09</span><span className="actor-badge actor-petugas">Aktor: Petugas Timbang</span><span className="dummy-badge">Data Dummy</span></div>
+        <div><div className="flex items-center gap-2 flex-wrap"><span className="actor-badge actor-petugas">Aktor: Petugas Timbang</span><span className="dummy-badge">Data Dummy</span></div>
           <h3 className="text-lg font-black text-slate-800 mt-2">Penimbangan Ulang Pengepul &amp; Penyusutan</h3>
           <p className="text-[11px] text-slate-500">Selisih (pengepul − catatan) negatif = penyusutan. Stok otomatis menyesuaikan.</p></div>
         <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg"><i className="fa-solid fa-weight-scale"></i></div>

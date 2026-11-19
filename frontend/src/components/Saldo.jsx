@@ -26,7 +26,7 @@ export default function Saldo() {
         {data && (
           <>
             <div className="rounded-3xl p-6 sm:p-7 bg-gradient-to-tr from-slate-950 via-emerald-950 to-slate-900 text-white shadow-2xl border border-emerald-500/30">
-              <span className="us-chip">US-06</span><span className="dummy-badge ml-2">Data Dummy</span>
+              <span className="dummy-badge ml-2">Data Dummy</span>
               <h3 className="text-xl sm:text-2xl font-black mt-3">{data.nama_nasabah}</h3>
               <p className="text-xs text-slate-300 font-mono">No. Rekening: {data.no_rekening} · Terdaftar {tglID(data.tgl_daftar)}</p>
               <div className="pt-5 mt-5 border-t border-white/10"><p className="text-[10px] text-slate-400">SALDO TABUNGAN SAYA</p><h2 className="text-3xl font-black text-emerald-400 font-mono mt-1">{rupiah(data.saldo)}</h2></div>

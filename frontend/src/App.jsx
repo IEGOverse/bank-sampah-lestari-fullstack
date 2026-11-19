@@ -24,17 +24,17 @@ export const tglID = (iso) => { if (!iso) return '-'; const [y, m, d] = String(i
 
 const NAV = [
   { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie', roles: ['Ketua', 'Admin'] },
-  { id: 'us03', label: 'US-03 · Peran Pengurus', icon: 'fa-user-shield', roles: ['Ketua', 'Admin'] },
-  { id: 'us04', label: 'US-04 · Catat Setoran', icon: 'fa-scale-balanced', roles: ['Petugas Timbang', 'Ketua', 'Admin'] },
-  { id: 'us05', label: 'US-05 · Harga Sampah', icon: 'fa-tags', roles: ['Ketua', 'Admin'] },
-  { id: 'us06', label: 'US-06 · Saldo & Riwayat', icon: 'fa-wallet', roles: ['Nasabah', 'Bendahara', 'Ketua', 'Admin'] },
-  { id: 'us07', label: 'US-07 · Penarikan', icon: 'fa-money-bill-transfer', roles: ['Bendahara', 'Ketua', 'Admin'] },
-  { id: 'us08', label: 'US-08 · Stok Gudang', icon: 'fa-warehouse', roles: ['Ketua', 'Admin'] },
-  { id: 'us09', label: 'US-09 · Penimbangan Ulang', icon: 'fa-weight-scale', roles: ['Petugas Timbang', 'Ketua', 'Admin'] },
-  { id: 'us10', label: 'US-10 · Penjualan Pengepul', icon: 'fa-truck-ramp-box', roles: ['Ketua', 'Admin'] },
-  { id: 'us11', label: 'US-11 · Kas Operasional', icon: 'fa-cash-register', roles: ['Bendahara', 'Ketua', 'Admin'] },
-  { id: 'us12', label: 'US-12 · Koreksi Transaksi', icon: 'fa-pen-to-square', roles: ['Ketua', 'Admin'] },
-  { id: 'us13', label: 'US-13 · Laporan', icon: 'fa-file-chart-column', roles: ['Ketua', 'Admin'] },
+  { id: 'us03', label: 'Peran Pengurus', icon: 'fa-user-shield', roles: ['Ketua', 'Admin'] },
+  { id: 'us04', label: 'Catat Setoran', icon: 'fa-scale-balanced', roles: ['Petugas Timbang', 'Ketua', 'Admin'] },
+  { id: 'us05', label: 'Harga Sampah', icon: 'fa-tags', roles: ['Ketua', 'Admin'] },
+  { id: 'us06', label: 'Saldo & Riwayat', icon: 'fa-wallet', roles: ['Nasabah', 'Bendahara', 'Ketua', 'Admin'] },
+  { id: 'us07', label: 'Penarikan', icon: 'fa-money-bill-transfer', roles: ['Bendahara', 'Ketua', 'Admin'] },
+  { id: 'us08', label: 'Stok Gudang', icon: 'fa-warehouse', roles: ['Ketua', 'Admin'] },
+  { id: 'us09', label: 'Penimbangan Ulang', icon: 'fa-weight-scale', roles: ['Petugas Timbang', 'Ketua', 'Admin'] },
+  { id: 'us10', label: 'Penjualan Pengepul', icon: 'fa-truck-ramp-box', roles: ['Ketua', 'Admin'] },
+  { id: 'us11', label: 'Kas Operasional', icon: 'fa-cash-register', roles: ['Bendahara', 'Ketua', 'Admin'] },
+  { id: 'us12', label: 'Koreksi Transaksi', icon: 'fa-pen-to-square', roles: ['Ketua', 'Admin'] },
+  { id: 'us13', label: 'Laporan', icon: 'fa-file-chart-column', roles: ['Ketua', 'Admin'] },
 ]
 
 const PAGES = {
@@ -44,12 +44,12 @@ const PAGES = {
 }
 const META = {
   dashboard: ['Dashboard', 'Ringkasan Pengawasan — Ketua'],
-  us03: ['US-03 · Ketua', 'Penetapan Peran Pengurus'], us04: ['US-04 · Petugas Timbang', 'Mencatat Setoran Sampah'],
-  us05: ['US-05 · Ketua', 'Mengatur Harga Sampah'], us06: ['US-06 · Nasabah', 'Memeriksa Saldo dan Riwayat'],
-  us07: ['US-07 · Bendahara', 'Mencatat Penarikan Tabungan'], us08: ['US-08 · Ketua', 'Melihat Stok Sampah'],
-  us09: ['US-09 · Petugas Timbang', 'Penimbangan Ulang & Penyusutan'], us10: ['US-10 · Ketua', 'Mencatat Penjualan kepada Pengepul'],
-  us11: ['US-11 · Bendahara', 'Mencatat Kas Operasional'], us12: ['US-12 · Ketua', 'Mengoreksi Transaksi'],
-  us13: ['US-13 · Ketua', 'Melihat Laporan'],
+  us03: ['Ketua', 'Penetapan Peran Pengurus'], us04: ['Petugas Timbang', 'Mencatat Setoran Sampah'],
+  us05: ['Ketua', 'Mengatur Harga Sampah'], us06: ['Nasabah', 'Memeriksa Saldo dan Riwayat'],
+  us07: ['Bendahara', 'Mencatat Penarikan Tabungan'], us08: ['Ketua', 'Melihat Stok Sampah'],
+  us09: ['Petugas Timbang', 'Penimbangan Ulang & Penyusutan'], us10: ['Ketua', 'Mencatat Penjualan kepada Pengepul'],
+  us11: ['Bendahara', 'Mencatat Kas Operasional'], us12: ['Ketua', 'Mengoreksi Transaksi'],
+  us13: ['Ketua', 'Melihat Laporan'],
 }
 
 export default function App() {

@@ -33,7 +33,7 @@ export default function Penarikan() {
   return (
     <div className="max-w-2xl mx-auto glass-card p-5 sm:p-7 rounded-3xl">
       <div className="flex items-start justify-between gap-3 border-b pb-4 mb-5 flex-wrap">
-        <div><div className="flex items-center gap-2 flex-wrap"><span className="us-chip">US-07</span><span className="actor-badge actor-bendahara">Aktor: Bendahara</span><span className="dummy-badge">Data Dummy</span></div>
+        <div><div className="flex items-center gap-2 flex-wrap"><span className="actor-badge actor-bendahara">Aktor: Bendahara</span><span className="dummy-badge">Data Dummy</span></div>
           <h3 className="text-lg font-black text-slate-800 mt-2">Catat Penarikan Tabungan</h3>
           <p className="text-[11px] text-slate-500">Min Rp50.000 · maks 1×/bulan · khusus Desember boleh seluruh saldo (BR-08, BR-09).</p></div>
         <div className="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg"><i className="fa-solid fa-money-bill-transfer"></i></div>

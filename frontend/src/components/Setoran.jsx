@@ -46,7 +46,7 @@ export default function Setoran() {
   return (
     <div className="glass-card p-5 sm:p-6 rounded-3xl space-y-4">
       <div className="flex items-start justify-between gap-3 border-b pb-4 flex-wrap">
-        <div><div className="flex items-center gap-2 flex-wrap"><span className="us-chip">US-04</span><span className="actor-badge actor-petugas">Aktor: Petugas Timbang</span><span className="dummy-badge">Data Dummy</span></div>
+        <div><div className="flex items-center gap-2 flex-wrap"><span className="actor-badge actor-petugas">Aktor: Petugas Timbang</span><span className="dummy-badge">Data Dummy</span></div>
           <h3 className="text-lg font-black text-slate-800 mt-2">Catat Setoran Sampah — Sabtu Pagi</h3>
           <p className="text-[11px] text-slate-500">Harga diambil dari periode bulan setoran; 90% tabungan · 10% kas operasional.</p></div>
         <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg"><i className="fa-solid fa-scale-balanced"></i></div>

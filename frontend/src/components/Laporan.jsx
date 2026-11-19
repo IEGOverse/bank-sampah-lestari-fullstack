@@ -38,7 +38,7 @@ export default function Laporan() {
   return (
     <div className="glass-card p-5 sm:p-6 rounded-3xl">
       <div className="flex items-start justify-between gap-3 border-b pb-4 mb-4 flex-wrap">
-        <div><div className="flex items-center gap-2 flex-wrap"><span className="us-chip">US-13</span><span className="actor-badge actor-ketua">Aktor: Ketua</span><span className="dummy-badge">Data Dummy</span></div>
+        <div><div className="flex items-center gap-2 flex-wrap"><span className="actor-badge actor-ketua">Aktor: Ketua</span><span className="dummy-badge">Data Dummy</span></div>
           <h3 className="text-lg font-black text-slate-800 mt-2">Laporan Bank Sampah Lestari</h3></div>
         <div className="flex items-center gap-2">
           <input type="month" className="input w-40" value={bulan} onChange={e => setBulan(e.target.value)} />

@@ -27,7 +27,7 @@ export default function Kas() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
       <div className="lg:col-span-2 glass-card p-5 sm:p-6 rounded-3xl">
-        <div className="flex items-center gap-2 flex-wrap"><span className="us-chip">US-11</span><span className="actor-badge actor-bendahara">Aktor: Bendahara</span><span className="dummy-badge">Data Dummy</span></div>
+        <div className="flex items-center gap-2 flex-wrap"><span className="actor-badge actor-bendahara">Aktor: Bendahara</span><span className="dummy-badge">Data Dummy</span></div>
         <h3 className="text-lg font-black text-slate-800 mt-2">Catat Kas Operasional</h3>
         <p className="text-[11px] text-slate-500 mb-4">Pemasukan (termasuk 10% setoran) &amp; pengeluaran (karung, transportasi).</p>
         {msg && <p className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 mb-3">{msg}</p>}

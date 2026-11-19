@@ -53,13 +53,13 @@ export default function Login({ onOk }) {
       <div className="flex-1 flex items-center justify-center p-4 sm:p-8 overflow-y-auto">
         <div className="w-full max-w-md">
           <div className="flex bg-white rounded-2xl shadow-soft border border-emerald-100 p-1.5 mb-5">
-            <button className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition ${tab === 'login' ? 'bg-emerald-600 text-white shadow' : 'text-slate-500'}`} onClick={() => { setTab('login'); setErr(''); setMsg('') }}>Masuk · US-02</button>
-            <button className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition ${tab === 'register' ? 'bg-emerald-600 text-white shadow' : 'text-slate-500'}`} onClick={() => { setTab('register'); setErr(''); setMsg('') }}>Daftar · US-01</button>
+            <button className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition ${tab === 'login' ? 'bg-emerald-600 text-white shadow' : 'text-slate-500'}`} onClick={() => { setTab('login'); setErr(''); setMsg('') }}>Masuk</button>
+            <button className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition ${tab === 'register' ? 'bg-emerald-600 text-white shadow' : 'text-slate-500'}`} onClick={() => { setTab('register'); setErr(''); setMsg('') }}>Daftar</button>
           </div>
 
           {tab === 'login' ? (
             <form onSubmit={submitLogin} className="glass-card rounded-3xl p-6 sm:p-8 shadow-xl space-y-4">
-              <div><span className="us-chip">US-02</span><h3 className="text-lg font-black text-slate-800 mt-2">Login Pengguna</h3><p className="text-[11px] text-slate-500">Hak akses menyesuaikan peran akun.</p></div>
+              <div><h3 className="text-lg font-black text-slate-800 mt-2">Login Pengguna</h3><p className="text-[11px] text-slate-500">Hak akses menyesuaikan peran akun.</p></div>
               <div><label className="lbl" htmlFor="u">Username</label><input id="u" className="input" required autoComplete="username" value={form.username} onChange={e => setForm({ ...form, username: e.target.value })} /></div>
               <div><label className="lbl" htmlFor="p">Password</label><input id="p" type="password" className="input" required autoComplete="current-password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} /></div>
               {msg && <p className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">{msg}</p>}
@@ -72,7 +72,7 @@ export default function Login({ onOk }) {
             </form>
           ) : (
             <form onSubmit={submitRegister} className="glass-card rounded-3xl p-6 sm:p-8 shadow-xl space-y-4">
-              <div><span className="us-chip">US-01</span><h3 className="text-lg font-black text-slate-800 mt-2">Registrasi Akun Nasabah</h3><p className="text-[11px] text-slate-500">Akun otomatis berperan <strong>Nasabah</strong>. Peran pengurus ditetapkan Admin/Ketua (US-03).</p></div>
+              <div><h3 className="text-lg font-black text-slate-800 mt-2">Registrasi Akun Nasabah</h3><p className="text-[11px] text-slate-500">Akun otomatis berperan <strong>Nasabah</strong>. Peran pengurus ditetapkan Admin/Ketua (US-03).</p></div>
               <div><label className="lbl" htmlFor="rn">Nama Lengkap *</label><input id="rn" className="input" required value={reg.nama_lengkap} onChange={e => setReg({ ...reg, nama_lengkap: e.target.value })} /></div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="lbl" htmlFor="hp">Nomor HP *</label><input id="hp" className="input" required value={reg.no_hp} onChange={e => setReg({ ...reg, no_hp: e.target.value })} /></div>

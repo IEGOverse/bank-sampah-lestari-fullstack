@@ -36,7 +36,7 @@ export default function Penjualan() {
   return (
     <div className="glass-card p-5 sm:p-6 rounded-3xl">
       <div className="flex items-start justify-between gap-3 border-b pb-4 mb-5 flex-wrap">
-        <div><div className="flex items-center gap-2 flex-wrap"><span className="us-chip">US-10</span><span className="actor-badge actor-ketua">Aktor: Ketua (berwenang)</span><span className="dummy-badge">Data Dummy</span></div>
+        <div><div className="flex items-center gap-2 flex-wrap"><span className="actor-badge actor-ketua">Aktor: Ketua (berwenang)</span><span className="dummy-badge">Data Dummy</span></div>
           <h3 className="text-lg font-black text-slate-800 mt-2">Catat Penjualan ke Pengepul</h3>
           <p className="text-[11px] text-slate-500">Stok berkurang sesuai jumlah keluar. Pembayaran pengepul belum dipastikan klien.</p></div>
         <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg"><i className="fa-solid fa-truck-ramp-box"></i></div>

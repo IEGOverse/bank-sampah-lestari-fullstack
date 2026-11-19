@@ -31,7 +31,7 @@ export default function Harga() {
     <div className="space-y-5">
       <div className="glass-card p-5 sm:p-6 rounded-3xl">
         <div className="flex items-start justify-between gap-3 border-b pb-4 mb-5 flex-wrap">
-          <div><div className="flex items-center gap-2 flex-wrap"><span className="us-chip">US-05</span><span className="actor-badge actor-ketua">Aktor: Ketua</span><span className="dummy-badge">Data Dummy</span></div>
+          <div><div className="flex items-center gap-2 flex-wrap"><span className="actor-badge actor-ketua">Aktor: Ketua</span><span className="dummy-badge">Data Dummy</span></div>
             <h3 className="text-lg font-black text-slate-800 mt-2">Mengatur Harga Sampah per kg</h3>
             <p className="text-[11px] text-slate-500">Harga baru menutup periode berjalan dan berlaku mulai hari ini; setoran lama memakai harga historis (BR-05).</p></div>
           <div className="w-11 h-11 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg"><i className="fa-solid fa-tags"></i></div>
