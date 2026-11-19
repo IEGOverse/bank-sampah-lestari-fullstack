@@ -23,18 +23,18 @@ export const fkg = (n) => Number(n || 0).toLocaleString('id-ID', { minimumFracti
 export const tglID = (iso) => { if (!iso) return '-'; const [y, m, d] = String(iso).slice(0, 10).split('-'); return `${d}/${m}/${y}` }
 
 const NAV = [
-  { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie', roles: ['Ketua', 'Admin'] },
-  { id: 'us03', label: 'Peran Pengurus', icon: 'fa-user-shield', roles: ['Ketua', 'Admin'] },
-  { id: 'us04', label: 'Catat Setoran', icon: 'fa-scale-balanced', roles: ['Petugas Timbang', 'Admin'] },
-  { id: 'us05', label: 'Harga Sampah', icon: 'fa-tags', roles: ['Ketua', 'Admin'] },
-  { id: 'us06', label: 'Saldo & Riwayat', icon: 'fa-wallet', roles: ['Nasabah', 'Bendahara', 'Ketua', 'Admin'] },
-  { id: 'us07', label: 'Penarikan', icon: 'fa-money-bill-transfer', roles: ['Bendahara', 'Admin'] },
-  { id: 'us08', label: 'Stok Gudang', icon: 'fa-warehouse', roles: ['Ketua', 'Admin'] },
-  { id: 'us09', label: 'Penimbangan Ulang', icon: 'fa-weight-scale', roles: ['Petugas Timbang', 'Admin'] },
-  { id: 'us10', label: 'Penjualan Pengepul', icon: 'fa-truck-ramp-box', roles: ['Ketua', 'Admin'] },
-  { id: 'us11', label: 'Kas Operasional', icon: 'fa-cash-register', roles: ['Bendahara', 'Admin'] },
-  { id: 'us12', label: 'Koreksi Transaksi', icon: 'fa-pen-to-square', roles: ['Ketua', 'Admin'] },
-  { id: 'us13', label: 'Laporan', icon: 'fa-file-chart-column', roles: ['Ketua', 'Admin'] },
+  { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie', roles: ['Ketua'] },
+  { id: 'us03', label: 'Peran Pengurus', icon: 'fa-user-shield', roles: ['Ketua'] },
+  { id: 'us04', label: 'Catat Setoran', icon: 'fa-scale-balanced', roles: ['Petugas Timbang'] },
+  { id: 'us05', label: 'Harga Sampah', icon: 'fa-tags', roles: ['Ketua'] },
+  { id: 'us06', label: 'Saldo & Riwayat', icon: 'fa-wallet', roles: ['Nasabah', 'Bendahara', 'Ketua'] },
+  { id: 'us07', label: 'Penarikan', icon: 'fa-money-bill-transfer', roles: ['Bendahara'] },
+  { id: 'us08', label: 'Stok Gudang', icon: 'fa-warehouse', roles: ['Ketua'] },
+  { id: 'us09', label: 'Penimbangan Ulang', icon: 'fa-weight-scale', roles: ['Petugas Timbang'] },
+  { id: 'us10', label: 'Penjualan Pengepul', icon: 'fa-truck-ramp-box', roles: ['Ketua'] },
+  { id: 'us11', label: 'Kas Operasional', icon: 'fa-cash-register', roles: ['Bendahara'] },
+  { id: 'us12', label: 'Koreksi Transaksi', icon: 'fa-pen-to-square', roles: ['Ketua'] },
+  { id: 'us13', label: 'Laporan', icon: 'fa-file-chart-column', roles: ['Ketua'] },
 ]
 
 const PAGES = {
@@ -68,7 +68,7 @@ export default function App() {
 
   const peran = me.pengguna.peran
   const nav = NAV.filter(n => n.roles.includes(peran))
-  const defaultTab = (peran === 'Ketua' || peran === 'Admin') ? 'dashboard' : nav[0]?.id || 'us06'
+  const defaultTab = peran === 'Ketua' ? 'dashboard' : nav[0]?.id || 'us06'
   const activeTab = nav.some(n => n.id === tab) ? tab : defaultTab
   const Page = PAGES[activeTab]
   const meta = META[activeTab]

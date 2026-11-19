@@ -10,7 +10,7 @@ const router = express.Router();
 router.use(authRequired);
 
 /* ---------- US-03 Penetapan peran (Ketua) ---------- */
-router.get('/pengguna', requireRole('Admin', 'Ketua'), async (req, res, next) => {
+router.get('/pengguna', requireRole('Ketua'), async (req, res, next) => {
   try {
     const rows = (await pool.query(`
       SELECT p.id_pengguna, p.username, p.nama_lengkap, p.peran, p.status, n.no_rekening, n.no_buku_tabungan
@@ -18,7 +18,7 @@ router.get('/pengguna', requireRole('Admin', 'Ketua'), async (req, res, next) =>
     res.json(rows);
   } catch (e) { next(e); }
 });
-router.patch('/pengguna/:id/peran', requireRole('Admin', 'Ketua'), async (req, res, next) => {
+router.patch('/pengguna/:id/peran', requireRole('Ketua'), async (req, res, next) => {
   try {
     const id = parseInt(req.params.id); const { peran } = req.body || {};
     if (!['Nasabah', 'Ketua', 'Petugas Timbang', 'Bendahara'].includes(peran)) throw httpError(400, 'VALIDATION', 'Peran tidak valid.');
@@ -30,7 +30,7 @@ router.patch('/pengguna/:id/peran', requireRole('Admin', 'Ketua'), async (req, r
     res.json(after);
   } catch (e) { next(e); }
 });
-router.patch('/pengguna/:id/status', requireRole('Admin', 'Ketua'), async (req, res, next) => {
+router.patch('/pengguna/:id/status', requireRole('Ketua'), async (req, res, next) => {
   try {
     const id = parseInt(req.params.id); const { status } = req.body || {};
     if (typeof status !== 'boolean') throw httpError(400, 'VALIDATION', 'status (boolean) wajib diisi.');
@@ -47,7 +47,7 @@ async function riwayatRekening(noRek) {
   const tarik = (await pool.query(`SELECT tgl_tarik iso, 'Penarikan' tipe, no_referensi ref, jumlah_tarik nominal, FALSE plus FROM penarikan_saldo WHERE no_rekening = $1 AND status_transaksi = 'Berhasil'`, [noRek])).rows;
   return [...setor, ...tarik].sort((a, b) => (a.iso < b.iso ? 1 : -1));
 }
-router.patch('/nasabah/:noRek/no-buku-tabungan', requireRole('Admin', 'Ketua'), async (req, res, next) => {
+router.patch('/nasabah/:noRek/no-buku-tabungan', requireRole('Ketua'), async (req, res, next) => {
   try {
     const rek = String(req.params.noRek).trim().toUpperCase();
     const nb = String(req.body?.no_buku_tabungan ?? '').trim();
@@ -74,7 +74,7 @@ router.get('/nasabah/me/riwayat', async (req, res, next) => {
     res.json({ saldo: nb.saldo, riwayat: await riwayatRekening(nb.no_rekening) });
   } catch (e) { next(e); }
 });
-router.get('/nasabah/:noRek/riwayat', requireRole('Admin', 'Ketua', 'Bendahara'), async (req, res, next) => {
+router.get('/nasabah/:noRek/riwayat', requireRole('Ketua', 'Bendahara'), async (req, res, next) => {
   try {
     const nb = (await pool.query('SELECT no_rekening, nama_nasabah, saldo, no_buku_tabungan, status_aktif FROM nasabah WHERE no_rekening = $1', [req.params.noRek])).rows[0];
     if (!nb) throw httpError(404, 'NOT_FOUND', 'Nasabah tidak ditemukan.');
@@ -83,7 +83,7 @@ router.get('/nasabah/:noRek/riwayat', requireRole('Admin', 'Ketua', 'Bendahara')
 });
 
 /* ---------- US-05 Harga ---------- */
-router.get('/harga', requireRole('Admin', 'Ketua', 'Petugas Timbang'), async (req, res, next) => {
+router.get('/harga', requireRole('Ketua', 'Petugas Timbang'), async (req, res, next) => {
   try {
     const iso = (req.query.berlaku && /^\d{4}-\d{2}-\d{2}$/.test(req.query.berlaku)) ? req.query.berlaku : '2026-11-16';
     const rows = (await pool.query(`
@@ -94,7 +94,7 @@ router.get('/harga', requireRole('Admin', 'Ketua', 'Petugas Timbang'), async (re
     res.json(rows);
   } catch (e) { next(e); }
 });
-router.get('/harga/riwayat', requireRole('Admin', 'Ketua', 'Petugas Timbang'), async (req, res, next) => {
+router.get('/harga/riwayat', requireRole('Ketua', 'Petugas Timbang'), async (req, res, next) => {
   try {
     const rows = (await pool.query(`
       SELECT h.id_harga, j.nama_jenis, h.harga_per_kg, h.periode_mulai, h.periode_selesai, p.nama_lengkap AS penetap
@@ -103,7 +103,7 @@ router.get('/harga/riwayat', requireRole('Admin', 'Ketua', 'Petugas Timbang'), a
     res.json(rows);
   } catch (e) { next(e); }
 });
-router.post('/harga', requireRole('Admin', 'Ketua'), async (req, res, next) => {
+router.post('/harga', requireRole('Ketua'), async (req, res, next) => {
   try {
     const { id_jenis, harga_per_kg } = req.body || {};
     const harga = Number(harga_per_kg);
@@ -144,7 +144,7 @@ const jenisNama = (row) => row && row.nama_jenis ? row.nama_jenis : null;
 const localISODate = (dt) => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
 
 /* ---------- US-04 Setoran ---------- */
-router.get('/setoran/by-ref/:ref', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
+router.get('/setoran/by-ref/:ref', requireRole('Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
   try {
     const ref = String(req.params.ref).trim().toUpperCase();
     const hdr = (await pool.query(`SELECT s.no_referensi, s.tgl_setor, s.no_rekening, s.total_berat, s.total_nilai, s.nilai_tabungan, s.nilai_kas_operasional, n.nama_nasabah
@@ -158,7 +158,7 @@ router.get('/setoran/by-ref/:ref', requireRole('Admin', 'Ketua', 'Petugas Timban
 });
 
 /* ---------- US-12 Koreksi ---------- */
-router.post('/koreksi', requireRole('Admin', 'Ketua'), async (req, res, next) => {
+router.post('/koreksi', requireRole('Ketua'), async (req, res, next) => {
   try {
     const { tipe, no_referensi, alasan, items_baru, nominal_baru, keterangan_baru } = req.body || {};
     if (!alasan || !String(alasan).trim()) throw httpError(400, 'VALIDATION', 'Alasan koreksi wajib diisi.');
@@ -243,13 +243,13 @@ router.post('/koreksi', requireRole('Admin', 'Ketua'), async (req, res, next) =>
 });
 
 /* ---------- US-04 Setoran ---------- */
-router.get('/nasabah', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
+router.get('/nasabah', requireRole('Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
   try {
     const rows = (await pool.query(`SELECT no_rekening, nama_nasabah, no_hp, saldo FROM nasabah WHERE status_aktif ORDER BY nama_nasabah`)).rows;
     res.json(rows);
   } catch (e) { next(e); }
 });
-router.post('/setoran', requireRole('Admin', 'Petugas Timbang'), async (req, res, next) => {
+router.post('/setoran', requireRole('Petugas Timbang'), async (req, res, next) => {
   try {
     const { no_rekening, tgl_setor, items } = req.body || {};
     const iso = (typeof tgl_setor === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(tgl_setor)) ? tgl_setor : new Date().toISOString().slice(0, 10);
@@ -299,7 +299,7 @@ router.post('/setoran', requireRole('Admin', 'Petugas Timbang'), async (req, res
     res.status(201).json(out);
   } catch (e) { next(e); }
 });
-router.get('/setoran', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
+router.get('/setoran', requireRole('Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
   try {
     const rek = req.query.no_rekening;
     const limit = Math.min(Number(req.query.limit) || 20, 100);
@@ -314,7 +314,7 @@ router.get('/setoran', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendaha
 });
 
 /* ---------- US-07 Penarikan (Bendahara) ---------- */
-router.post('/penarikan', requireRole('Admin', 'Bendahara'), async (req, res, next) => {
+router.post('/penarikan', requireRole('Bendahara'), async (req, res, next) => {
   try {
     const { no_rekening, jumlah_tarik } = req.body || {};
     const jumlah = Number(jumlah_tarik);
@@ -342,7 +342,7 @@ router.post('/penarikan', requireRole('Admin', 'Bendahara'), async (req, res, ne
     res.status(201).json(out);
   } catch (e) { next(e); }
 });
-router.get('/penarikan', requireRole('Admin', 'Ketua', 'Bendahara'), async (req, res, next) => {
+router.get('/penarikan', requireRole('Ketua', 'Bendahara'), async (req, res, next) => {
   try {
     const rek = req.query.no_rekening; const ref = req.query.ref; const limit = Math.min(Number(req.query.limit) || 20, 100);
     const where = [];
@@ -360,7 +360,7 @@ router.get('/penarikan', requireRole('Admin', 'Ketua', 'Bendahara'), async (req,
 });
 
 /* ---------- US-08 Stok ---------- */
-router.get('/stok', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
+router.get('/stok', requireRole('Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
   try {
     const rows = (await pool.query(`
       SELECT s.id_jenis, j.nama_jenis, j.kategori, s.total_berat_kg, s.estimasi_nilai, s.tgl_terakhir_update
@@ -368,7 +368,7 @@ router.get('/stok', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendahara'
     res.json(rows);
   } catch (e) { next(e); }
 });
-router.get('/stok/mutasi', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
+router.get('/stok/mutasi', requireRole('Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
   try {
     const rows = (await pool.query(`
       SELECT m.tgl_mutasi, j.nama_jenis, m.tipe_mutasi, m.perubahan_kg, m.saldo_setelah_kg, m.referensi_tabel, m.referensi_id
@@ -378,7 +378,7 @@ router.get('/stok/mutasi', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Ben
 });
 
 /* ---------- US-09 Penimbangan ulang ---------- */
-router.post('/penimbangan-ulang', requireRole('Admin', 'Petugas Timbang'), async (req, res, next) => {
+router.post('/penimbangan-ulang', requireRole('Petugas Timbang'), async (req, res, next) => {
   try {
     const { tgl_penimbangan, items } = req.body || {};
     const iso = (typeof tgl_penimbangan === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(tgl_penimbangan)) ? tgl_penimbangan : new Date().toISOString().slice(0, 10);
@@ -410,7 +410,7 @@ router.post('/penimbangan-ulang', requireRole('Admin', 'Petugas Timbang'), async
 });
 
 /* ---------- US-10 Penjualan ke pengepul ---------- */
-router.post('/penjualan', requireRole('Admin', 'Ketua'), async (req, res, next) => {
+router.post('/penjualan', requireRole('Ketua'), async (req, res, next) => {
   try {
     const { tgl_penjualan, keterangan, items } = req.body || {};
     const iso = (typeof tgl_penjualan === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(tgl_penjualan)) ? tgl_penjualan : new Date().toISOString().slice(0, 10);
@@ -434,7 +434,7 @@ router.post('/penjualan', requireRole('Admin', 'Ketua'), async (req, res, next) 
     res.status(201).json(out);
   } catch (e) { next(e); }
 });
-router.get('/penjualan', requireRole('Admin', 'Ketua'), async (req, res, next) => {
+router.get('/penjualan', requireRole('Ketua'), async (req, res, next) => {
   try {
     const rows = (await pool.query(`
       SELECT p.no_referensi, p.tgl_penjualan, j.nama_jenis, d.berat_keluar_kg
@@ -445,14 +445,14 @@ router.get('/penjualan', requireRole('Admin', 'Ketua'), async (req, res, next) =
 });
 
 /* ---------- US-11 Kas ---------- */
-router.get('/kas', requireRole('Admin', 'Ketua', 'Bendahara'), async (req, res, next) => {
+router.get('/kas', requireRole('Ketua', 'Bendahara'), async (req, res, next) => {
   try {
     const rows = (await pool.query(`SELECT k.no_referensi, k.tipe_kas, k.nominal, k.tgl_kas, k.keterangan, k.referensi_tabel, k.referensi_id FROM kas_operasional k ORDER BY k.tgl_kas DESC, k.id_kas DESC LIMIT 100`)).rows;
     const saldo = (await pool.query(`SELECT COALESCE(SUM(CASE WHEN tipe_kas = 'PEMASUKAN' THEN nominal ELSE -nominal END), 0) AS saldo FROM kas_operasional`)).rows[0].saldo;
     res.json({ saldo, kas: rows });
   } catch (e) { next(e); }
 });
-router.post('/kas', requireRole('Admin', 'Bendahara'), async (req, res, next) => {
+router.post('/kas', requireRole('Bendahara'), async (req, res, next) => {
   try {
     const { tipe_kas, nominal, keterangan, tgl_kas } = req.body || {};
     const nom = Number(nominal);
@@ -465,7 +465,7 @@ router.post('/kas', requireRole('Admin', 'Bendahara'), async (req, res, next) =>
 });
 
 /* ---------- US-12 Audit ---------- */
-router.get('/audit', requireRole('Admin', 'Ketua'), async (req, res, next) => {
+router.get('/audit', requireRole('Ketua'), async (req, res, next) => {
   try {
     const rows = (await pool.query(`SELECT a.waktu, a.tabel_terkait, a.id_referensi, a.aksi, a.alasan, p.nama_lengkap AS pengguna FROM audit_log a LEFT JOIN pengguna p ON p.id_pengguna = a.id_pengguna ORDER BY a.waktu DESC LIMIT 100`)).rows;
     res.json(rows);
@@ -473,7 +473,7 @@ router.get('/audit', requireRole('Admin', 'Ketua'), async (req, res, next) => {
 });
 
 /* ---------- US-13 Laporan ---------- */
-router.get('/laporan/ringkasan', requireRole('Admin', 'Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
+router.get('/laporan/ringkasan', requireRole('Ketua', 'Petugas Timbang', 'Bendahara'), async (req, res, next) => {
   try {
     const r = (await pool.query(`
       SELECT
@@ -484,7 +484,7 @@ router.get('/laporan/ringkasan', requireRole('Admin', 'Ketua', 'Petugas Timbang'
     res.json(r);
   } catch (e) { next(e); }
 });
-router.get('/laporan/:jenis', requireRole('Admin', 'Ketua', 'Bendahara'), async (req, res, next) => {
+router.get('/laporan/:jenis', requireRole('Ketua', 'Bendahara'), async (req, res, next) => {
   try {
     const jenis = req.params.jenis; const bulan = req.query.bulan && /^\d{4}-\d{2}$/.test(req.query.bulan) ? req.query.bulan : new Date().toISOString().slice(0, 7);
     const out = [];

@@ -34,21 +34,15 @@ BEGIN;
 -- ============================================================================
 -- 1. TIPE KUSTOM (ENUM)
 -- ============================================================================
--- peran_pengguna: KETUA, PETUGAS TIMBANG, BENDAHARA (pengurus) + NASABAH + ADMIN.
+-- peran_pengguna: KETUA, PETUGAS TIMBANG, BENDAHARA (pengurus) + NASABAH.
 -- SRS: akun login untuk seluruh aktor, registrasi mandiri nasabah selalu
 -- berperan Nasabah; peran pengurus hanya dapat ditetapkan pihak berwenang.
--- ADMIN ditambahkan Tahap 5: peran teknis (superset kewenangan pengurus)
--- untuk pengelolaan akun/sistem, dipisah dari akun Ketua atas permintaan klien.
 DO $$
 BEGIN
-    CREATE TYPE peran_pengguna AS ENUM ('Nasabah', 'Ketua', 'Petugas Timbang', 'Bendahara', 'Admin');
+    CREATE TYPE peran_pengguna AS ENUM ('Nasabah', 'Ketua', 'Petugas Timbang', 'Bendahara');
 EXCEPTION WHEN duplicate_object THEN
     NULL;
 END $$;
-
--- Migrasi untuk database v2.0 yang sudah berisi data (idempoten):
--- menambahkan nilai 'Admin' pada enum peran_pengguna.
-ALTER TYPE peran_pengguna ADD VALUE IF NOT EXISTS 'Admin';
 
 -- ============================================================================
 -- 2. SEQUENCE & FUNGSI UTILITAS
