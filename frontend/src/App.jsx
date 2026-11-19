@@ -75,14 +75,19 @@ export default function App() {
 
   return (
     <AuthCtx.Provider value={{ me, reload: loadMe }}>
-      <div className="bg-slate-100/70 text-slate-800 flex h-screen overflow-hidden antialiased">
+      <div className="bg-transparent text-[#12241c] flex h-screen overflow-hidden antialiased">
         {/* SIDEBAR */}
-        <aside className={`w-64 bg-slate-950 text-slate-300 flex flex-col justify-between shrink-0 border-r border-slate-800 z-30 h-full transition-transform duration-200 ${menuOpen ? 'block' : 'hidden lg:flex'} lg:static fixed inset-y-0 left-0`}>
+        <aside className={`w-64 bg-gradient-to-b from-[#0c3a2d] via-[#0f4a38] to-[#0a2e24] text-slate-200 flex flex-col justify-between shrink-0 border-r border-emerald-900/60 z-30 h-full transition-transform duration-200 ${menuOpen ? 'block' : 'hidden lg:flex'} lg:static fixed inset-y-0 left-0`}>
           <div className="flex flex-col min-h-0 h-full">
-            <div className="px-5 py-4 border-b border-slate-800/80 flex items-center justify-between bg-slate-900/90">
+            <div className="px-5 py-4 border-b border-emerald-800/60 flex items-center justify-between bg-gradient-to-r from-emerald-900/40 to-transparent">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-lg"><i className="fa-solid fa-recycle text-lg"></i></div>
-                <div><h1 className="font-extrabold text-white text-sm">Bank Sampah</h1><p className="text-[10px] text-slate-400">SIM · Kelurahan Airmadidi</p></div>
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-green-400 via-emerald-600 to-emerald-800 flex items-center justify-center shadow-[0_6px_16px_-6px_rgba(34,197,94,.65)] ring-1 ring-emerald-300/40">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4.5 12.6C4.5 8.36 8.02 4.6 20 4.5c-.1 11.98-3.86 15.5-8.1 15.5-2.6 0-4.94-.86-6.75-2.67-.63-.63.8-2.17 1.32-2.4" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M11.7 11.9c1.05-1.1 3-1.75 6.8-1.65" stroke="#d9fbe6" strokeWidth="1.4" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <div><h1 className="font-extrabold text-white text-sm tracking-tight">Bank Sampah</h1><p className="text-[10px] text-emerald-200/80">SIM · Kelurahan Airmadidi</p></div>
               </div>
               <button className="lg:hidden text-slate-400 hover:text-white p-2" onClick={() => setMenuOpen(false)}><i className="fa-solid fa-xmark"></i></button>
             </div>
@@ -95,7 +100,7 @@ export default function App() {
               ))}
             </nav>
           </div>
-          <div className="p-4 border-t border-slate-800/90 flex items-center justify-between">
+          <div className="p-4 border-t border-emerald-800/50 bg-emerald-950/30 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-bold text-white text-xs">{me.pengguna.nama_lengkap.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
               <div><div className="text-[11px] font-bold text-white leading-tight">{me.pengguna.nama_lengkap}</div><div className="text-[9px] text-emerald-400">{peran}</div></div>

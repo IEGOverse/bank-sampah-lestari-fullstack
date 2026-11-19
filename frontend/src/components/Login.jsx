@@ -34,13 +34,13 @@ export default function Login({ onOk }) {
   ]
 
   return (
-    <div className="fixed inset-0 z-50 flex bg-slate-100">
+    <div className="fixed inset-0 z-50 flex bg-[#f2faf5]">
       {/* Brand panel */}
-      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-950 text-white flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-[#0c3a2d] via-[#114534] to-[#081f17] text-white flex-col justify-between p-12 relative overflow-hidden">
         <div className="absolute -right-16 -bottom-20 text-[300px] opacity-10"><i className="fa-solid fa-recycle"></i></div>
         <div className="relative">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg"><i className="fa-solid fa-recycle text-2xl"></i></div>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 via-emerald-600 to-emerald-800 ring-1 ring-emerald-300/40 flex items-center justify-center shadow-lg"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4.5 12.6C4.5 8.36 8.02 4.6 20 4.5c-.1 11.98-3.86 15.5-8.1 15.5-2.6 0-4.94-.86-6.75-2.67-.63-.63.8-2.17 1.32-2.4" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.7 11.9c1.05-1.1 3-1.75 6.8-1.65" stroke="#d9fbe6" stroke-width="1.4" stroke-linecap="round"/></svg></div>
             <div><h1 className="text-xl font-black">Bank Sampah Lestari</h1><p className="text-emerald-300 text-xs">SIM · Kelurahan Airmadidi</p></div>
           </div>
           <h2 className="text-4xl font-black leading-tight mt-14">Sampah bernilai,<br/>tabungan bertumbuh.</h2>
@@ -52,7 +52,7 @@ export default function Login({ onOk }) {
       {/* Form panel */}
       <div className="flex-1 flex items-center justify-center p-4 sm:p-8 overflow-y-auto">
         <div className="w-full max-w-md">
-          <div className="flex bg-white rounded-2xl shadow-sm border border-slate-200 p-1.5 mb-5">
+          <div className="flex bg-white rounded-2xl shadow-soft border border-emerald-100 p-1.5 mb-5">
             <button className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition ${tab === 'login' ? 'bg-emerald-600 text-white shadow' : 'text-slate-500'}`} onClick={() => { setTab('login'); setErr(''); setMsg('') }}>Masuk · US-02</button>
             <button className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition ${tab === 'register' ? 'bg-emerald-600 text-white shadow' : 'text-slate-500'}`} onClick={() => { setTab('register'); setErr(''); setMsg('') }}>Daftar · US-01</button>
           </div>
